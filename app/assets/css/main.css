@@ -1,0 +1,68 @@
+/* Endo's Camelot Wheel - theme
+   Dark-first DJ tool: true dark base, amber accent, hue ring for the 12 keys. */
+
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+/* ponytail: full theme lives in CSS vars; Nuxt UI picks them up. upgrade path: none needed. */
+:root {
+  --cw-bg: #0a0a0c;
+  --cw-text: #f5f2ea;
+  --cw-muted: #8a8577;
+  --cw-accent: #f0b429; /* amber */
+  --cw-ring: #f0b429;
+}
+
+.light-mode {
+  --cw-bg: #faf7f0;
+  --cw-text: #171512;
+  --cw-muted: #6b675c;
+  --cw-accent: #b87d0a;
+}
+
+html {
+  color-scheme: dark light;
+}
+
+body {
+  background: var(--cw-bg);
+  color: var(--cw-text);
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+/* display numbers on the wheel */
+.cw-display {
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+/* mono readouts (table, gear aesthetic) */
+.cw-mono {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+}
+
+/* selected key ring pulse - dark mode glow, light mode solid */
+.cw-selected {
+  stroke: var(--cw-ring);
+  filter: drop-shadow(0 0 6px rgba(240, 180, 41, 0.6));
+}
+
+.cw-selected-text {
+  fill: var(--cw-accent);
+}
+
+/* compatible keys at full saturation, incompatible dimmed */
+.cw-compat {
+  opacity: 1;
+  transition: opacity 0.25s ease;
+}
+
+.cw-dim {
+  opacity: 0.28;
+  transition: opacity 0.25s ease;
+}
+
+.cw-hover {
+  opacity: 0.55;
+  transition: opacity 0.15s ease;
+}
