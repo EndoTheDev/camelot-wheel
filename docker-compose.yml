@@ -5,11 +5,11 @@ services:
     image: ghcr.io/endothedev/camelot-wheel:latest
     labels:
       - "traefik.enable=true"
-      # ponytail: PathPrefix rule per tool - the /tools/... convention settled in planning
+      # ponytail: NO strip-prefix - the app sets baseURL /tools/camelot-wheel/ and
+      # expects the full path (asset urls resolve under it). stripping caused the
+      # redirect loop between app root and real path.
       - "traefik.http.routers.tools-camelot.rule=Host(`endothe.dev`) && PathPrefix(`/tools/camelot-wheel`)"
       - "traefik.http.services.tools-camelot.loadbalancer.server.port=3000"
-      - "traefik.http.middlewares.tools-camelot-stripprefix.stripprefix.prefixes=/tools/camelot-wheel"
-      - "traefik.http.routers.tools-camelot.middlewares=tools-camelot-stripprefix"
     networks:
       - services
     restart: unless-stopped
