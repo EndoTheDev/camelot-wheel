@@ -1,11 +1,11 @@
 <script setup lang="ts">
-// Interactive Camelot wheel: 24 segments (12 numbers x A/B).
-// Click = lock selection, hover = preview compatibles. Pure SVG + CSS classes.
+// Interactive Camelot wheel: two concentric rings.
+// Outer ring = B (major), inner ring = A (minor), hub in the center.
+// Click = lock selection, hover = preview compatibles.
 import { ALL_KEYS, compatibleKeys, type Key } from '~/utils/keys';
 
-// hue per camelot number 1-12, A (minor) = full saturation ring, B (major) = same hue lighter
 function segHue(n: number): number {
-  return (n - 1) * 30; // 12 positions across the wheel, 30deg hue steps
+  return (n - 1) * 30;
 }
 
 const selected = ref<string | null>(null);
@@ -23,26 +23,27 @@ function segClass(k: Key): string {
   return 'cw-dim';
 }
 
-// wheel geometry: outer ring = B (major, even index in layout), inner = A (minor)
-const R_OUT = 230;
-const R_IN = 150;
+// geometry: 520 viewBox. B ring 160->240, A ring 75->155, hub r=70.
 const CX = 260;
 const CY = 260;
-const SEG = Math.PI / 12; // 24 segments = 15deg each... but we use 12 positions x 2 rings
+const R_B_OUT = 240;
+const R_B_IN = 160;
+const R_A_OUT = 155;
+const R_A_IN = 75;
 
-// 12 wedges, each wedge split into major (outer half) + minor (inner half)
-function wedgePath(n: number): string {
+// annular wedge path between two radii for one 30deg position n (1-12)
+function ringPath(n: number, rOut: number, rIn: number): string {
   const start = ((n - 1) * 30 - 90 - 15) * (Math.PI / 180);
   const end = start + 30 * (Math.PI / 180);
-  const x1 = CX + R_OUT * Math.cos(start);
-  const y1 = CY + R_OUT * Math.sin(start);
-  const x2 = CX + R_OUT * Math.cos(end);
-  const y2 = CY + R_OUT * Math.sin(end);
-  const x3 = CX + R_IN * Math.cos(end);
-  const y3 = CY + R_IN * Math.sin(end);
-  const x4 = CX + R_IN * Math.cos(start);
-  const y4 = CY + R_IN * Math.sin(start);
-  return `M ${x1} ${y1} A ${R_OUT} ${R_OUT} 0 0 1 ${x2} ${y2} L ${x3} ${y3} A ${R_IN} ${R_IN} 0 0 0 ${x4} ${y4} Z`;
+  const x1 = CX + rOut * Math.cos(start);
+  const y1 = CY + rOut * Math.sin(start);
+  const x2 = CX + rOut * Math.cos(end);
+  const y2 = CY + rOut * Math.sin(end);
+  const x3 = CX + rIn * Math.cos(end);
+  const y3 = CY + rIn * Math.sin(end);
+  const x4 = CX + rIn * Math.cos(start);
+  const y4 = CY + rIn * Math.sin(start);
+  return `M ${x1} ${y1} A ${rOut} ${rOut} 0 0 1 ${x2} ${y2} L ${x3} ${y3} A ${rIn} ${rIn} 0 0 0 ${x4} ${y4} Z`;
 }
 
 function labelPos(n: number, r: number): { x: number; y: number } {
@@ -55,60 +56,94 @@ const numbers = Array.from({ length: 12 }, (_, i) => i + 1);
 function keyFor(n: number, letter: 'A' | 'B'): Key {
   return ALL_KEYS.find(k => k.camelot === `${n}${letter}`)!;
 }
+
+function pick(n: number, letter: 'A' | 'B') {
+  const k = `${n}${letter}`;
+  selected.value = selected.value === k ? null : k;
+}
 </script>
 
 <template>
   <div class="flex flex-col items-center gap-6">
     <svg
       viewBox="0 0 520 520"
-      class="w-full max-w-xl select-none"
+      class="w-full max-w-sm select-none"
       role="img"
       aria-label="Camelot wheel - select a key to see compatible keys"
     >
-      <!-- 12 wedges: outer half B (major), inner half A (minor) -->
-      <g v-for="n in numbers" :key="n">
-        <!-- outer: B major -->
+      <!-- outer ring: B major -->
+      <g v-for="n in numbers" :key="'b' + n">
         <path
-          :d="wedgePath(n)"
+          :d="ringPath(n, R_B_OUT, R_B_IN)"
           class="cursor-pointer"
           :class="segClass(keyFor(n, 'B'))"
           :fill="`hsl(${segHue(n)} 55% 45%)`"
-          @click="selected = selected === `${n}B` ? null : `${n}B`"
+          stroke="rgba(0,0,0,0.25)"
+          stroke-width="1"
+          @click="pick(n, 'B')"
           @mouseenter="hovered = `${n}B`"
           @mouseleave="hovered = null"
         />
-        <!-- inner half drawn as separate ring band for A -->
       </g>
-      <!-- minor ring: separate annulus inside -->
+      <!-- inner ring: A minor -->
       <g v-for="n in numbers" :key="'a' + n">
-        <circle
-          :cx="CX"
-          :cy="CY"
-          r="0"
-          fill="none"
+        <path
+          :d="ringPath(n, R_A_OUT, R_A_IN)"
+          class="cursor-pointer"
+          :class="segClass(keyFor(n, 'A'))"
+          :fill="`hsl(${segHue(n)} 55% 38%)`"
+          stroke="rgba(0,0,0,0.25)"
+          stroke-width="1"
+          @click="pick(n, 'A')"
+          @mouseenter="hovered = `${n}A`"
+          @mouseleave="hovered = null"
         />
       </g>
-      <!-- labels -->
-      <g v-for="n in numbers" :key="'l' + n">
+      <!-- hub -->
+      <circle :cx="CX" :cy="CY" r="70" fill="var(--cw-bg)" stroke="var(--cw-muted)" stroke-width="1" style="pointer-events: none" />
+      <text
+        v-if="selected || hovered"
+        :x="CX"
+        :y="CY"
+        text-anchor="middle"
+        dominant-baseline="middle"
+        class="cw-display cw-mono cw-selected-text"
+        :font-size="30"
+        style="pointer-events: none"
+      >
+        {{ selected ?? hovered }}
+      </text>
+      <text
+        v-else
+        :x="CX"
+        :y="CY"
+        text-anchor="middle"
+        dominant-baseline="middle"
+        :font-size="14"
+        fill="var(--cw-muted)"
+        style="pointer-events: none"
+      >
+        pick a key
+      </text>
+      <!-- labels: never intercept the pointer, clicks pass to the wedges -->
+      <g v-for="n in numbers" :key="'l' + n" style="pointer-events: none">
         <text
-          v-bind="labelPos(n, 195)"
+          v-bind="labelPos(n, 200)"
           text-anchor="middle"
           dominant-baseline="middle"
           class="cw-display cw-mono"
-          :class="{ 'cw-selected-text': selected === `${n}B` }"
-          fill="white"
-          :font-size="20"
+          :fill="selected === `${n}B` ? 'var(--cw-accent)' : 'white'"
+          :font-size="18"
         >
           {{ n }}B
         </text>
         <text
-          v-bind="labelPos(n, 125)"
+          v-bind="labelPos(n, 115)"
           text-anchor="middle"
           dominant-baseline="middle"
           class="cw-display cw-mono"
-          :class="{ 'cw-selected-text': selected === `${n}A` }"
-          fill="white"
-          :font-size="20"
+          :fill="selected === `${n}A` ? 'var(--cw-accent)' : 'white'"
+          :font-size="18"
         >
           {{ n }}A
         </text>
