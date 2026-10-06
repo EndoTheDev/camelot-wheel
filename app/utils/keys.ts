@@ -62,8 +62,11 @@ export function keyByCamelot(camelot: string): Key | undefined {
 }
 
 // one runnable check: fails if the logic breaks
-// run: bunx tsx app/utils/keys.ts (or node --experimental-strip-types)
-if (typeof Bun !== 'undefined' || typeof process !== 'undefined') {
+// run manually: node --experimental-strip-types app/utils/keys.ts
+// ponytail: guarded by an env var, NOT `typeof process` - the Nuxt server
+// bundle also runs under node, and a bare process check made the self-check
+// fire in production and process.exit(0) the server right after boot.
+if (process.env.CAMELOT_SELF_CHECK === '1') {
   const c8a = compatibleKeys('8A');
   console.log('8A ->', [...c8a].sort().join(', '));
   const c1a = compatibleKeys('1A');
@@ -71,5 +74,5 @@ if (typeof Bun !== 'undefined' || typeof process !== 'undefined') {
   const ok1 = [...c8a].sort().join() === ['8A', '7A', '9A', '8B'].sort().join();
   const ok2 = [...c1a].sort().join() === ['1A', '12A', '2A', '1B'].sort().join();
   console.log(ok1 && ok2 ? 'SELF-CHECK PASS' : 'SELF-CHECK FAIL');
-  if (typeof process !== 'undefined') process.exit(ok1 && ok2 ? 0 : 1);
+  process.exit(ok1 && ok2 ? 0 : 1);
 }
