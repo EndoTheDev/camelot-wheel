@@ -1,5 +1,6 @@
 <script setup lang="ts">
-// Compatibility table: the crawlable half. Every key row with its compatible set.
+// Compatibility table: the crawlable half. Split into two side-by-side
+// halves - A (minor) left, B (major) right - mirroring the wheel's rings.
 // Rows highlight in sync with the wheel (shared useSelection state):
 // - active key: strong amber row
 // - basic compatibles: soft amber
@@ -32,43 +33,52 @@ function comboChip(k: string): string {
 function compatList(camelot: string): string[] {
   return [...compatibleKeys(camelot)].filter(k => k !== camelot).sort();
 }
+
+// the two halves: minors and majors, like the wheel's rings
+const minors = computed(() => ALL_KEYS.filter(k => k.camelot.endsWith('A')));
+const majors = computed(() => ALL_KEYS.filter(k => k.camelot.endsWith('B')));
 </script>
 
 <template>
-  <div class="w-full max-w-xl">
-    <h2 class="cw-display mb-4 text-xl">
-      what mixes with what
-    </h2>
-    <div class="overflow-hidden rounded-lg border" style="border-color: var(--cw-muted)">
-      <table class="cw-mono w-full text-sm">
-        <thead>
-          <tr style="background: color-mix(in srgb, var(--cw-accent) 8%, transparent)">
-            <th class="p-2 text-left">key</th>
-            <th class="p-2 text-left">classical</th>
-            <th class="p-2 text-left">open key</th>
-            <th class="p-2 text-left">mixes with</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="k in ALL_KEYS"
-            :key="k.camelot"
-            class="cursor-pointer"
-            :class="rowClass(k.camelot)"
-            @mouseenter="hovered = k.camelot"
-            @mouseleave="hovered = null"
-            @click="selected = selected === k.camelot ? null : k.camelot"
-          >
-            <td class="p-2 font-bold" style="color: var(--cw-accent)">
-              {{ k.camelot }}
-              <span v-if="comboChip(k.camelot)" class="cw-combo-chip">{{ comboChip(k.camelot) }}</span>
-            </td>
-            <td class="p-2">{{ k.classical }}</td>
-            <td class="p-2">{{ k.openKey }}</td>
-            <td class="p-2">{{ compatList(k.camelot).join(' ') }}</td>
-          </tr>
-        </tbody>
-      </table>
+  <div class="w-full">
+    <!-- desktop: A left, B right. mobile: stacked. -->
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-4">
+      <div v-for="half in [{ label: 'A - minor', keys: minors }, { label: 'B - major', keys: majors }]" :key="half.label">
+        <h2 class="cw-display mb-2 text-sm" style="color: var(--cw-muted)">
+          {{ half.label }}
+        </h2>
+        <div class="overflow-hidden rounded-lg border" style="border-color: var(--cw-muted)">
+          <table class="cw-mono w-full text-sm">
+            <thead>
+              <tr style="background: color-mix(in srgb, var(--cw-accent) 8%, transparent)">
+                <th class="p-1.5 text-left">key</th>
+                <th class="p-1.5 text-left">classical</th>
+                <th class="p-1.5 text-left">open key</th>
+                <th class="p-1.5 text-left">mixes with</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="k in half.keys"
+                :key="k.camelot"
+                class="cursor-pointer"
+                :class="rowClass(k.camelot)"
+                @mouseenter="hovered = k.camelot"
+                @mouseleave="hovered = null"
+                @click="selected = selected === k.camelot ? null : k.camelot"
+              >
+                <td class="p-1.5 font-bold" style="color: var(--cw-accent)">
+                  {{ k.camelot }}
+                  <span v-if="comboChip(k.camelot)" class="cw-combo-chip">{{ comboChip(k.camelot) }}</span>
+                </td>
+                <td class="p-1.5">{{ k.classical }}</td>
+                <td class="p-1.5">{{ k.openKey }}</td>
+                <td class="p-1.5">{{ compatList(k.camelot).join(' ') }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 </template>
