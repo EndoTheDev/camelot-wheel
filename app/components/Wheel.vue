@@ -3,23 +3,36 @@
 // Outer ring = B (major), inner ring = A (minor), hub in the center.
 // Click = lock selection, hover = preview compatibles.
 import { ALL_KEYS, compatibleKeys, type Key } from '~/utils/keys';
+import { comboTargets } from '~/utils/combos';
+import { useSelection } from '~/composables/useSelection';
 
 function segHue(n: number): number {
   return (n - 1) * 30;
 }
 
-const selected = ref<string | null>(null);
-const hovered = ref<string | null>(null);
+// shared with the table - hover/select lights up both views
+const { selected, hovered, activeCombos } = useSelection();
 
 const activeSet = computed(() => {
   const base = selected.value ?? hovered.value;
   return base ? compatibleKeys(base) : null;
 });
 
+// advanced combos for the active key - separate visual tier (dotted outline)
+const activeComboMap = computed(() => {
+  const base = selected.value ?? hovered.value;
+  if (!base || activeCombos.value.size === 0) return null;
+  return comboTargets(base, activeCombos.value);
+});
+
 function segClass(k: Key): string {
-  if (!activeSet.value) return 'cw-compat';
+  if (!activeSet.value) {
+    if (activeComboMap.value?.has(k.camelot)) return 'cw-combo';
+    return 'cw-compat';
+  }
   if (selected.value === k.camelot) return 'cw-compat';
   if (activeSet.value.has(k.camelot)) return 'cw-compat';
+  if (activeComboMap.value?.has(k.camelot)) return 'cw-combo';
   return 'cw-dim';
 }
 

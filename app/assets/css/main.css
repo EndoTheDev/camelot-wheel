@@ -61,6 +61,18 @@ body {
   transition: opacity 0.25s ease;
 }
 
+/* advanced combo targets: distinct tier - dotted outline over the segment */
+.cw-combo {
+  opacity: 1;
+  transition: opacity 0.25s ease;
+}
+
+.cw-combo path,
+path.cw-combo {
+  stroke-dasharray: 6 4;
+  stroke-width: 3;
+}
+
 .cw-dim {
   opacity: 0.28;
   transition: opacity 0.25s ease;

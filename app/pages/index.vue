@@ -1,5 +1,19 @@
 <script setup lang="ts">
 // home page: wheel hero + table below. All server-rendered for crawlers.
+import { COMBOS } from '~/utils/combos';
+import { useSelection } from '~/composables/useSelection';
+
+const { activeCombos } = useSelection();
+
+function toggleCombo(id: string) {
+  const next = new Set(activeCombos.value);
+  if (next.has(id)) {
+    next.delete(id);
+  } else {
+    next.add(id);
+  }
+  activeCombos.value = next;
+}
 </script>
 
 <template>
@@ -26,6 +40,21 @@
         </p>
       </div>
       <div class="order-2 w-full max-w-xl">
+        <!-- advanced combos panel: default off, one toggle per named move -->
+        <div class="mb-4 flex flex-wrap gap-2" aria-label="advanced combos">
+          <button
+            v-for="c in COMBOS"
+            :key="c.id"
+            :title="c.hint"
+            class="cw-mono rounded-full border px-3 py-1 text-xs"
+            :style="activeCombos.has(c.id)
+              ? 'border-color: var(--cw-accent); color: var(--cw-accent); background: color-mix(in srgb, var(--cw-accent) 12%, transparent)'
+              : 'border-color: var(--cw-muted); color: var(--cw-muted)'"
+            @click="toggleCombo(c.id)"
+          >
+            {{ c.label }}
+          </button>
+        </div>
         <KeyTable />
       </div>
     </main>
