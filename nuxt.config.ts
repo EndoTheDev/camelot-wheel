@@ -9,6 +9,9 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
 
   app: {
+    // assets must resolve under the tool's own path, not the domain root
+    // (the main website serves /_nuxt/* from a different build and 404s ours)
+    baseURL: '/tools/camelot-wheel/',
     head: {
       htmlAttrs: { lang: 'en' },
       title: 'Camelot Wheel - Harmonic Mixing Guide',
