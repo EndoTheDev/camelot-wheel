@@ -22,6 +22,14 @@ export default defineNuxtConfig({
             'Interactive Camelot wheel for harmonic mixing. Pick a key, see which keys fit. Camelot, classical and Traktor Open Key notation.',
         },
       ],
+      script: [
+        {
+          // umami analytics - this tool's own entry (52ff81d2)
+          src: 'https://umami.endothe.dev/script.js',
+          'data-website-id': '52ff81d2-cadf-4807-a293-6ccb10665fa1',
+          defer: true,
+        },
+      ],
     },
   },
 });
