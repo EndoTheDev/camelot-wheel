@@ -80,7 +80,7 @@ function pick(n: number, letter: 'A' | 'B') {
   <div class="flex flex-col items-center gap-6">
     <svg
       viewBox="0 0 520 520"
-      class="w-full max-w-sm select-none"
+      class="w-full max-w-md select-none"
       role="img"
       aria-label="Camelot wheel - select a key to see compatible keys"
     >

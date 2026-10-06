@@ -17,7 +17,9 @@ function toggleCombo(id: string) {
 </script>
 
 <template>
-  <div class="min-h-screen" style="background: var(--cw-bg); color: var(--cw-text)">
+    <!-- desktop: wheel left, table right. mobile: wheel top, table below.
+         root is a flex column so the footer can be pinned to the bottom (mt-auto) -->
+  <div class="flex min-h-screen flex-col" style="background: var(--cw-bg); color: var(--cw-text)">
     <header class="mx-auto flex max-w-6xl items-center justify-between px-4 pt-6">
       <h1 class="cw-display text-2xl">
         camelot wheel
@@ -32,7 +34,8 @@ function toggleCombo(id: string) {
         relative major/minor switch - that's the whole system.
       </p>
       <!-- wheel: capped to viewport so it never needs scrolling; shrink-0 keeps its
-           size while the wider two-column table pushes the row's center left -->
+           size while the wider two-column table pushes the row's center left.
+           max-w-md (~28px larger than before) - the screenshot showed dead space -->
       <div class="wheel-wrap order-1 flex shrink-0 flex-col items-center gap-4">
         <Wheel />
         <p class="hidden max-w-md text-center text-sm lg:block" style="color: var(--cw-muted)">
@@ -44,7 +47,7 @@ function toggleCombo(id: string) {
           your ears are the final judge.
         </p>
       </div>
-      <div class="order-2 w-full max-w-3xl">
+      <div class="order-2 w-full max-w-4xl">
         <!-- advanced combos panel: default off, one toggle per named move -->
         <div class="mb-4 flex flex-wrap gap-2" aria-label="advanced combos">
           <button
@@ -64,8 +67,8 @@ function toggleCombo(id: string) {
       </div>
     </main>
 
-    <!-- footer: disclaimer on mobile (desktop sees it under the wheel) + source link -->
-    <footer class="flex flex-col items-center gap-2 px-4 pb-8 text-center text-xs" style="color: var(--cw-muted)">
+    <!-- footer pinned to the viewport bottom via mt-auto in the page flex column -->
+    <footer class="mt-auto flex flex-col items-center gap-2 px-4 pt-8 pb-8 text-center text-xs" style="color: var(--cw-muted)">
       <p class="max-w-md lg:hidden">
         harmonic mixing is a guide, not a rulebook. combos need experimentation -
         your ears are the final judge.
