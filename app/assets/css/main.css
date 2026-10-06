@@ -4,8 +4,19 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
 
-/* ponytail: full theme lives in CSS vars; Nuxt UI picks them up. upgrade path: none needed. */
+/* ponytail: full theme lives in CSS vars; Nuxt UI's ColorMode toggles html.dark.
+   Upgrade path: none needed - both modes keep the same amber hue family. */
 :root {
+  /* light values (default when not .dark) */
+  --cw-bg: #faf7f0;
+  --cw-text: #171512;
+  --cw-muted: #6b675c;
+  --cw-accent: #b87d0a;
+  --cw-ring: #b87d0a;
+}
+
+/* dark mode: Nuxt UI adds .dark on <html> - same vars, dark values */
+.dark {
   --cw-bg: #0a0a0c;
   --cw-text: #f5f2ea;
   --cw-muted: #8a8577;
@@ -13,15 +24,8 @@
   --cw-ring: #f0b429;
 }
 
-.light-mode {
-  --cw-bg: #faf7f0;
-  --cw-text: #171512;
-  --cw-muted: #6b675c;
-  --cw-accent: #b87d0a;
-}
-
 html {
-  color-scheme: dark light;
+  color-scheme: light dark;
 }
 
 body {
