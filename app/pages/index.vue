@@ -78,6 +78,10 @@ function toggleCombo(id: string) {
         deployed from a raspberry pi -
         <a href="https://github.com/EndoTheDev/camelot-wheel" style="color: var(--cw-accent)">source on github</a>
       </p>
+      <p>
+        what <em>tempo</em> mixes with this?
+        <a href="https://endothe.dev/tools/check-bpm" style="color: var(--cw-accent)">check bpm</a>
+      </p>
     </footer>
   </div>
 </template>
