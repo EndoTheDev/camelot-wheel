@@ -22,7 +22,7 @@ function toggleCombo(id: string) {
       <h1 class="cw-display text-2xl">
         camelot wheel
       </h1>
-      <UColorModeButton size="sm" variant="ghost" />
+      <ColorModeButton />
     </header>
 
     <!-- desktop: wheel left, table right. mobile: wheel top, table below. -->

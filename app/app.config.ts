@@ -7,5 +7,8 @@ export default defineAppConfig({
       primary: 'amber',
       neutral: 'stone',
     },
+    // use @nuxtjs/color-mode directly (like the main site) - same button,
+    // same system-default behavior, same storage key.
+    colorMode: false,
   } satisfies ModuleOptions['ui'],
 });
