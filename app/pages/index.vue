@@ -20,7 +20,7 @@ function toggleCombo(id: string) {
     <!-- desktop: wheel left, table right. mobile: wheel top, table below.
          root is a flex column so the footer can be pinned to the bottom (mt-auto) -->
   <div class="flex min-h-screen flex-col" style="background: var(--cw-bg); color: var(--cw-text)">
-    <header class="mx-auto flex max-w-6xl items-center justify-between px-4 pt-6">
+    <header class="mx-auto flex w-full max-w-7xl items-center justify-between px-4 pt-6">
       <h1 class="cw-display text-2xl">
         camelot wheel
       </h1>
