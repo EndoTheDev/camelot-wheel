@@ -1,15 +1,20 @@
 services:
-  camelot-wheel:
-    container_name: tools-camelot
+  check-key:
+    container_name: tools-check-key
     build: .
-    image: ghcr.io/endothedev/camelot-wheel:latest
+    image: ghcr.io/endothedev/check-key:latest
     labels:
       - "traefik.enable=true"
-      # ponytail: NO strip-prefix - the app sets baseURL /tools/camelot-wheel/ and
+      # ponytail: NO strip-prefix - the app sets baseURL /tools/check-key/ and
       # expects the full path (asset urls resolve under it). stripping caused the
       # redirect loop between app root and real path.
-      - "traefik.http.routers.tools-camelot.rule=Host(`endothe.dev`) && PathPrefix(`/tools/camelot-wheel`)"
-      - "traefik.http.services.tools-camelot.loadbalancer.server.port=3000"
+      - "traefik.http.routers.tools-check-key.rule=Host(`endothe.dev`) && PathPrefix(`/tools/check-key`)"
+      - "traefik.http.services.tools-check-key.loadbalancer.server.port=3000"
+      # 308 redirect: old camelot-wheel path keeps working (links, SEO history)
+      - "traefik.http.middlewares.cwk-redirect.redirectregex.regex=^https://(.*)/tools/camelot-wheel(.*)$$"
+      - "traefik.http.middlewares.cwk-redirect.redirectregex.replacement=https://$${1}/tools/check-key$${2}"
+      - "traefik.http.routers.cwk-old.rule=Host(`endothe.dev`) && PathPrefix(`/tools/camelot-wheel`)"
+      - "traefik.http.routers.cwk-old.middlewares=cwk-redirect"
     networks:
       - services
     restart: unless-stopped

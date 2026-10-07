@@ -76,7 +76,7 @@ function toggleCombo(id: string) {
       <p>
         built by <a href="https://endothe.dev" style="color: var(--cw-accent)">endo</a> -
         deployed from a raspberry pi -
-        <a href="https://github.com/EndoTheDev/camelot-wheel" style="color: var(--cw-accent)">source on github</a>
+        <a href="https://github.com/EndoTheDev/check-key" style="color: var(--cw-accent)">source on github</a>
       </p>
       <p>
         what <em>tempo</em> mixes with this?

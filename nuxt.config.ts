@@ -11,7 +11,7 @@ export default defineNuxtConfig({
   app: {
     // assets must resolve under the tool's own path, not the domain root
     // (the main website serves /_nuxt/* from a different build and 404s ours)
-    baseURL: '/tools/camelot-wheel/',
+    baseURL: '/tools/check-key/',
     head: {
       htmlAttrs: { lang: 'en' },
       title: 'Camelot Wheel - Harmonic Mixing Guide',
@@ -19,7 +19,7 @@ export default defineNuxtConfig({
         {
           name: 'description',
           content:
-            'Interactive Camelot wheel for harmonic mixing. Pick a key, see which keys fit. Camelot, classical and Traktor Open Key notation.',
+            'check-key: interactive Camelot wheel for harmonic mixing. Pick a key, see which keys fit. Camelot, classical and Traktor Open Key notation.',
         },
       ],
       script: [

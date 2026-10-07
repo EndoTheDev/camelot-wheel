@@ -35,7 +35,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/endothedev/camelot-wheel:latest
+          tags: ghcr.io/endothedev/check-key:latest
           platforms: linux/arm64
           cache-from: type=gha
           cache-to: type=gha,mode=max

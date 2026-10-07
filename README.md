@@ -1,8 +1,8 @@
-# camelot wheel
+# check-key
 
-Interactive Camelot wheel for harmonic mixing. Pick a key, see which keys fit.
+check-key: interactive Camelot wheel for harmonic mixing (formerly camelot-wheel). Pick a key, see which keys fit.
 
-Live at [endothe.dev/tools/camelot-wheel](https://endothe.dev/tools/camelot-wheel).
+Live at [endothe.dev/tools/check-key](https://endothe.dev/tools/check-key).
 
 - Nuxt 4 + Nuxt UI, dark-first amber theme
 - Camelot / classical / Traktor Open Key notation toggle
