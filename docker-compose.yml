@@ -15,6 +15,12 @@ services:
       - "traefik.http.middlewares.cwk-redirect.redirectregex.replacement=https://$${1}/tools/check-key$${2}"
       - "traefik.http.routers.cwk-old.rule=Host(`endothe.dev`) && PathPrefix(`/tools/camelot-wheel`)"
       - "traefik.http.routers.cwk-old.middlewares=cwk-redirect"
+      # ponytail: priority bump so this router beats the app router on the old
+      # path - without it the nitro app answers first with its own mangled 302.
+      # service ref is required even though the middleware redirects before
+      # the service is hit - without it traefik drops the router entirely.
+      - "traefik.http.routers.cwk-old.priority=100"
+      - "traefik.http.routers.cwk-old.service=tools-check-key"
     networks:
       - services
     restart: unless-stopped
