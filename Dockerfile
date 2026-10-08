@@ -1,10 +1,13 @@
-# camelot-wheel - build for production (arm64 on the Pi)
-# ponytail: npm install, not npm ci - no lockfile is committed (Pi has no node
-# toolchain to generate one). ceiling: builds are less reproducible without a
-# lockfile; upgrade path = generate package-lock.json when a dev box touches this.
-FROM node:22-alpine AS build
+# check-key - build for production
+# BUILD ON THE RUNNER'S NATIVE ARCH, run arm64 on the Pi. QEMU-emulated vite
+# bundling crawled 6h to timeout; native bundling is minutes and the Nuxt
+# output is platform-independent JS. npm fetch hardening = the registry
+# flakes seen all day (EIDLETIMEOUT / ECONNRESET).
+# ponytail: npm install, not npm ci - no lockfile is committed.
+FROM --platform=$BUILDPLATFORM node:22-alpine AS build
 WORKDIR /app
 COPY package*.json ./
+ENV NPM_CONFIG_FETCH_TIMEOUT=180000 NPM_CONFIG_FETCH_RETRIES=8
 RUN npm install
 COPY . .
 RUN npm run build
