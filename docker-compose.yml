@@ -11,8 +11,9 @@ services:
       - "traefik.http.routers.tools-check-key.rule=Host(`endothe.dev`) && PathPrefix(`/tools/check-key`)"
       - "traefik.http.services.tools-check-key.loadbalancer.server.port=3000"
       # 308 redirect: old camelot-wheel path keeps working (links, SEO history)
-      - "traefik.http.middlewares.cwk-redirect.redirectregex.regex=^https://(.*)/tools/camelot-wheel(.*)$$"
+      - "traefik.http.middlewares.cwk-redirect.redirectregex.regex=^https?://([^/]+)/tools/camelot-wheel(.*)$$"
       - "traefik.http.middlewares.cwk-redirect.redirectregex.replacement=https://$${1}/tools/check-key$${2}"
+      - "traefik.http.middlewares.cwk-redirect.redirectregex.permanent=true"
       - "traefik.http.routers.cwk-old.rule=Host(`endothe.dev`) && PathPrefix(`/tools/camelot-wheel`)"
       - "traefik.http.routers.cwk-old.middlewares=cwk-redirect"
       # ponytail: priority bump so this router beats the app router on the old
